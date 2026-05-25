@@ -6,7 +6,7 @@
                 aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span
                     class="navbar-toggle-icon"><span class="toggle-line"></span></span>
             </button>
-            <a class="navbar-brand me-1 me-sm-3" href="../index.html">
+            <a class="navbar-brand me-1 me-sm-3" href="./">
                 <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center"><img src="{{ asset('template/assets/img/icons/logo.png') }}"
                             alt="phoenix" width="27" />
@@ -45,7 +45,7 @@
                                     <img class="rounded-circle "
                                         src="{{ asset('template/assets/img/team/72x72/57.webp') }}" alt="" />
                                 </div>
-                                <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
+                                <h6 class="mt-2 text-body-emphasis">{{ Auth::user()->name }}</h6>
                             </div>
                         </div>
                         <div class="overflow-auto scrollbar" style="height: 10rem;">
@@ -59,8 +59,14 @@
                             </ul>
                         </div>
                         <div class="card-footer p-0 border-top border-translucent">
-                            <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!">
-                                    <span class="me-2" data-feather="log-out"> </span>Sign out</a>
+                            <div class="px-3">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-phoenix-secondary d-flex flex-center w-100">
+                                        <span class="me-2" data-feather="log-out"></span>
+                                        Keluar
+                                    </button>
+                                </form>
                             </div>
                             <div class="my-2 text-center fw-bold fs-10 text-body-quaternary">
                                 <a class="text-body-quaternary me-1" href="#!">Privacy policy</a>
