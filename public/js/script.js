@@ -29,44 +29,27 @@ function startVideo() {
         });
 }
 
-function getLabeledFaceDescriptors() {
+async function getLabeledFaceDescriptors() {
+    const response = await fetch('/face-descriptors');
+    const data = await response.json();
+    console.log(data);
 
-    const labels = [
-        'messi',
-        'ronaldo',
-        'tien',
-        'jokowi',
-        'prabowo'
-    ];
-
-    return Promise.all(
-        labels.map(async (label) => {
-
-            const descriptions = [];
-
-            for (let i = 1; i <= 2; i++) {
-
-                const img = await faceapi.fetchImage(
-                    `./label/${label}/${i}.jpg`
+    return data.map(user => {
+        const descriptors =
+            user.descriptors.map(desc => {
+                return new Float32Array(
+                    JSON.parse(desc)
                 );
+            });
 
-                const detections = await faceapi
-                    .detectSingleFace(img)
-                    .withFaceLandmarks()
-                    .withFaceDescriptor();
+        return new faceapi.LabeledFaceDescriptors(
+            user.label,
+            descriptors
+        );
 
-                descriptions.push(
-                    detections.descriptor
-                );
-            }
-
-            return new faceapi.LabeledFaceDescriptors(
-                label,
-                descriptions
-            );
-        })
-    );
+    });
 }
+
 
 video.addEventListener('play', async () => {
 
@@ -178,13 +161,13 @@ video.addEventListener('play', async () => {
                 }
 
                 // AUDIO
-                if (result.label === 'jokowi') {
-                    jokowiAudio.play();
-                }
+                // if (result.label === 'Jokowi') {
+                //     jokowiAudio.play();
+                // }
 
-                if (result.label === 'prabowo') {
-                    prabowoAudio.play();
-                }
+                // if (result.label === 'prabowo') {
+                //     prabowoAudio.play();
+                // }
 
             }
 
