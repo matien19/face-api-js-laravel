@@ -8,3 +8,41 @@
 <script src="{{ asset("template/vendors/feather-icons/feather.min.js")}}"></script>
 <script src="{{ asset("template/vendors/dayjs/dayjs.min.js")}}"></script>
 <script src="{{ asset("template/assets/js/phoenix.js")}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        await Promise.all([
+            faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+            faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+            faceapi.nets.faceRecognitionNet.loadFromUri('/models')
+        ]);
+    });
+    
+    function showAlert(type, message) {
+        if (!message) return;
+
+        let title = 'Informasi';
+
+        if (type === 'success') title = 'Berhasil!';
+        if (type === 'error') title = 'Oops!';
+        if (type === 'warning') title = 'Peringatan!';
+        if (type === 'info') title = 'Informasi';
+
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: type
+        });
+
+    }
+
+    function autoShowSessionAlert(sessionData) {
+        if (!sessionData) return;
+        Object.entries(sessionData).forEach(([type, msg]) => {
+            if (msg) {
+                showAlert(type, msg);
+            }
+        });
+    }
+    
+</script>

@@ -14,5 +14,16 @@ Route::get('/ronaldo-detector', [AttendanceController::class, 'ronaldoDetector']
 Auth::routes();
 Route::middleware('auth')->group(function () {
     Route::get('/beranda', [HomeController::class, 'index'])->name('beranda');
+
+    // Master Data
     Route::get('/user', [UserController::class, 'index'])->name('md.user');
+    Route::post('/user/add', [UserController::class, 'store'])->name('md.user.tambah');
+
 });
+
+// Route::fallback(function () {
+//     if (Auth::check()) {
+//         return redirect('/beranda');
+//     }
+//     return redirect('/login');
+// });
