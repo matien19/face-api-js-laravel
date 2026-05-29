@@ -43,8 +43,9 @@
                     @foreach ($data as $user)
                     <tr class="hover-actions-trigger btn-reveal-trigger position-static">
                         <td class="no align-middle white-space-nowrap pe-5">{{ $loop->iteration }}</td>
-                        <td class="customer align-middle white-space-nowrap pe-5"><a
-                                class="d-flex align-items-center text-body-emphasis" href="">
+                        <td class="customer align-middle white-space-nowrap pe-5">
+                            <a class="d-flex align-items-center text-body-emphasis"
+                                href="{{ route('md.user.detail', $user->id) }}">
                                 <div class="avatar avatar-m"><img class="rounded-circle"
                                         src="{{ $user->foto ?? asset('label/default.jpg') }}" alt="" /></div>
                                 <p class="mb-0 ms-3 text-body-emphasis fw-bold">{{ $user->name }}</p>
@@ -143,6 +144,14 @@
 @push('scripts')
 <script defer src="{{ asset('js/face-api.min.js') }}"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        await Promise.all([
+            faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
+            faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+            faceapi.nets.faceRecognitionNet.loadFromUri('/models')
+        ]);
+    });
+    
     document.addEventListener('DOMContentLoaded', function () {
         autoShowSessionAlert({
             success: "{{ session('success') }}",

@@ -45,41 +45,7 @@
                                     </a>
                                     <!-- more inner pages-->
                                 </li>
-                                <li class="nav-item"><a class="nav-link" href="../apps/crm/deals.html">
-                                        <div class="d-flex align-items-center"><span class="nav-link-text">Deals</span>
-                                        </div>
-                                    </a><!-- more inner pages-->
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="../apps/crm/deal-details.html">
-                                        <div class="d-flex align-items-center"><span class="nav-link-text">Deal
-                                                details</span></div>
-                                    </a><!-- more inner pages-->
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="../apps/crm/leads.html">
-                                        <div class="d-flex align-items-center"><span class="nav-link-text">Leads</span>
-                                        </div>
-                                    </a><!-- more inner pages-->
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="../apps/crm/lead-details.html">
-                                        <div class="d-flex align-items-center"><span class="nav-link-text">Lead
-                                                details</span></div>
-                                    </a><!-- more inner pages-->
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="../apps/crm/reports.html">
-                                        <div class="d-flex align-items-center"><span
-                                                class="nav-link-text">Reports</span></div>
-                                    </a><!-- more inner pages-->
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="../apps/crm/report-details.html">
-                                        <div class="d-flex align-items-center"><span class="nav-link-text">Report
-                                                details</span></div>
-                                    </a><!-- more inner pages-->
-                                </li>
-                                <li class="nav-item"><a class="nav-link" href="../apps/crm/add-contact.html">
-                                        <div class="d-flex align-items-center"><span class="nav-link-text">Add
-                                                contact</span></div>
-                                    </a><!-- more inner pages-->
-                                </li>
+                                
                             </ul>
                         </div>
                     </div>

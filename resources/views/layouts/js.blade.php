@@ -10,14 +10,7 @@
 <script src="{{ asset("template/assets/js/phoenix.js")}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', async function () {
-        await Promise.all([
-            faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-            faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-            faceapi.nets.faceRecognitionNet.loadFromUri('/models')
-        ]);
-    });
-    
+
     function showAlert(type, message) {
         if (!message) return;
 

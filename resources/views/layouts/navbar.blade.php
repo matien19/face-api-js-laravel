@@ -10,7 +10,7 @@
                 <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center"><img src="{{ asset('template/assets/img/icons/logo.png') }}"
                             alt="phoenix" width="27" />
-                        <h5 class="logo-text ms-2 d-none d-sm-block">phoenix</h5>
+                        <h5 class="logo-text ms-2 d-none d-sm-block">Presensi</h5>
                     </div>
                 </div>
             </a>
