@@ -19,7 +19,7 @@
                 <li class="nav-item">
                     <!-- label-->
                     <p class="navbar-vertical-label">Apps</p>
-                    <hr class="navbar-vertical-line"/>
+                    <hr class="navbar-vertical-line" />
                     <!-- parent pages-->
                     <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1" href="#nv-CRM"
                             role="button" data-bs-toggle="collapse"
@@ -34,7 +34,8 @@
                             </div>
                         </a>
                         <div class="parent-wrapper label-1">
-                            <ul class="nav collapse parent {{ Request::is('user*') ? 'show' : '' }}" data-bs-parent="#navbarVerticalCollapse" id="nv-CRM">
+                            <ul class="nav collapse parent {{ Request::is('user*') ? 'show' : '' }}"
+                                data-bs-parent="#navbarVerticalCollapse" id="nv-CRM">
                                 <li class="collapsed-nav-item-title d-none">Master Data</li>
                                 <li class="nav-item">
                                     <a class="nav-link {{ Request::is('user*') ? 'active' : '' }}"
@@ -45,11 +46,24 @@
                                     </a>
                                     <!-- more inner pages-->
                                 </li>
-                                
+
                             </ul>
                         </div>
                     </div>
                 </li>
+                <div class="nav-item-wrapper">
+                    <a class="nav-link {{ Request::is('laporan*') ? 'active' : '' }} label-1"
+                        href="{{ route('laporan.index') }}" role="button" data-bs-toggle="" aria-expanded="false">
+                        <div class="d-flex align-items-center">
+                            <span class="nav-link-icon">
+                                <span data-feather="file-text"></span>
+                            </span>
+                            <span class="nav-link-text-wrapper">
+                                <span class="nav-link-text">Laporan</span>
+                            </span>
+                        </div>
+                    </a>
+                </div>
             </ul>
         </div>
     </div>
