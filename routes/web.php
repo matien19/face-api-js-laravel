@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AttendanceController::class, 'index'])->name('absensi');
 Route::get('/face-descriptors', [AttendanceController::class, 'descriptors'])->name('face-descriptors');
+Route::post('/face/store', [AttendanceController::class, 'store']);
 
 Auth::routes();
 Route::middleware('auth')->group(function () {

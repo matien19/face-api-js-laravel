@@ -8,7 +8,8 @@ const logList = document.getElementById('log-list');
 const jokowiAudio = new Audio('./audio/lawan.mp3');
 const prabowoAudio = new Audio('./audio/wowo.mp3');
 
-let lastDetection = '';
+const DETECTION_DELAY = 3 * 60 * 1000; // 3 menit
+let lastDetection = {};
 
 Promise.all([
     faceapi.nets.ssdMobilenetv1.loadFromUri('./models'),
@@ -30,11 +31,11 @@ function startVideo() {
 }
 
 async function getLabeledFaceDescriptors() {
+
     const response = await fetch('/face-descriptors');
     const data = await response.json();
-    console.log(data);
-
     return data.map(user => {
+
         const descriptors =
             user.descriptors.map(desc => {
                 return new Float32Array(
@@ -42,19 +43,26 @@ async function getLabeledFaceDescriptors() {
                 );
             });
 
-        return new faceapi.LabeledFaceDescriptors(
-            user.label,
-            descriptors
-        );
-
+        return {
+            user_id: user.user_id,
+            label: user.label,
+            descriptors: new faceapi.LabeledFaceDescriptors(
+                user.label,
+                descriptors
+            )
+        };
     });
 }
 
 
 video.addEventListener('play', async () => {
 
-    const labeledFaceDescriptors =
+    const users =
         await getLabeledFaceDescriptors();
+
+    // AMBIL DESCRIPTOR FACEAPI
+    const labeledFaceDescriptors =
+        users.map(u => u.descriptors);
 
     const faceMatcher =
         new faceapi.FaceMatcher(
@@ -117,7 +125,7 @@ video.addEventListener('play', async () => {
                 );
             });
 
-        results.forEach((result, i) => {
+        for (const [i, result] of results.entries()) {
 
             const box =
                 resizedDetections[i].detection.box;
@@ -129,49 +137,105 @@ video.addEventListener('play', async () => {
 
             drawBox.draw(canvas);
 
-            // UPDATE INFO
+            // JIKA WAJAH DIKENALI
             if (result.label !== 'unknown') {
 
-                namaEl.innerText =
-                    result.label.toUpperCase();
-
-                statusEl.innerText =
-                    'HADIR';
-
-                waktuEl.innerText =
-                    new Date().toLocaleTimeString(
-                        'id-ID'
+                const user =
+                    users.find(
+                        u => u.label === result.label
                     );
 
-                // LOG KEHADIRAN
-                if (lastDetection !== result.label) {
+                if (!user) continue;
 
+                const now = Date.now();
+
+                // JEDA 3 MENIT
+
+                if (
+                    lastDetection[user.user_id] &&
+                    now - lastDetection[user.user_id] < DETECTION_DELAY
+                ) {
+                    continue;
+                }
+
+                lastDetection[user.user_id] = now;
+
+                try {
+
+                    // KIRIM KE SERVER
+                    const response = await fetch('/face/store', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document
+                                .querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            user_id: user.user_id
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Presensi Berhasil',
+                            text: `${data.nama} (${data.status.toUpperCase()})`,
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: data.message,
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+
+                    }
+
+                    // UPDATE PANEL KANAN
+                    namaEl.innerText =
+                        result.label.toUpperCase();
+
+                    statusEl.innerText =
+                        data.status.toUpperCase();
+
+                    waktuEl.innerText =
+                        new Date().toLocaleTimeString('id-ID');
+
+                    // LOG KEHADIRAN
                     const li =
                         document.createElement('li');
 
                     li.innerHTML = `
-                        ${result.label.toUpperCase()}
-                        - HADIR
+                        <strong>${result.label.toUpperCase()}</strong>
+                        - ${data.status.toUpperCase()}
                         (${new Date().toLocaleTimeString('id-ID')})
                     `;
 
                     logList.prepend(li);
 
-                    lastDetection = result.label;
+                    // AUDIO
+                    // if (result.label === 'Jokowi') {
+                    //     jokowiAudio.play();
+                    // }
+
+                    // if (result.label === 'prabowo') {
+                    //     prabowoAudio.play();
+                    // }
+
+                } catch (error) {
+
+                    console.log(error);
+
                 }
-
-                // AUDIO
-                // if (result.label === 'Jokowi') {
-                //     jokowiAudio.play();
-                // }
-
-                // if (result.label === 'prabowo') {
-                //     prabowoAudio.play();
-                // }
 
             }
 
-        });
+        }
 
     }, 500);
 
