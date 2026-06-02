@@ -11,7 +11,7 @@ Route::get('/', [AttendanceController::class, 'index'])->name('absensi');
 Route::get('/face-descriptors', [AttendanceController::class, 'descriptors'])->name('face-descriptors');
 Route::post('/face/store', [AttendanceController::class, 'store']);
 
-Auth::routes();
+Auth::routes(); 
 Route::middleware('auth')->group(function () {
     Route::get('/beranda', [HomeController::class, 'index'])->name('beranda');
 
@@ -19,7 +19,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/user', [UserController::class, 'index'])->name('md.user');
     Route::post('/user/add', [UserController::class, 'store'])->name('md.user.tambah');
     Route::get('/user/detail/{id}', [UserController::class, 'show'])->name('md.user.detail');
-
+    Route::post('/user/{user}/face-store', [UserController::class, 'storeFace'])->name('user.face.store');
+    Route::post('/user/{user}/face-reset', [UserController::class, 'resetFace'])->name('user.face.reset');
     // Laporan
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
 
