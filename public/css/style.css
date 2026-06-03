@@ -158,6 +158,84 @@ canvas {
     justify-content: center;
 }
 
+/* Pengatur pergantian halaman */
+.page-view {
+    transition: all 0.3s ease;
+}
+
+.d-none {
+    display: none !important;
+}
+
+/* Styling Halaman Pilih */
+#halaman-pilih {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.welcome-container {
+    text-align: center;
+    background: #ffffff;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.welcome-container h1 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.welcome-container p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.menu-absen {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-absen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 18px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    color: white;
+}
+
+.btn-absen:hover {
+    transform: translateY(-2px);
+}
+
+.btn-absen.datang {
+    background-color: #28a745;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-absen.pulang {
+    background-color: #dc3545;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+.btn-absen .icon {
+    font-size: 24px;
+}
+
 /* RESPONSIVE */
 @media(max-width: 900px) {
 

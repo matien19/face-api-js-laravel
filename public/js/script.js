@@ -8,14 +8,66 @@ const logList = document.getElementById('log-list');
 const jokowiAudio = new Audio('./audio/lawan.mp3');
 const prabowoAudio = new Audio('./audio/wowo.mp3');
 
-const DETECTION_DELAY = 3 * 60 * 1000; // 3 menit
+const halamanPilih = document.getElementById('halaman-pilih');
+const halamanKamera = document.getElementById('halaman-kamera');
+const modeAktifEl = document.getElementById('mode-aktif');
+const infoTipeEl = document.getElementById('info-tipe');
+
+const DETECTION_DELAY = 0.5 * 60 * 1000;
 let lastDetection = {};
+let tipeAbsenAktif = "";
+let localStream = null;
+
+// SAAT USER MEMILIH TOMBOL DI HALAMAN DEPAN
+async function pilihTipeAbsen(tipe) {
+    if (!modelsLoaded) {
+        Swal.fire('Tunggu', 'Sistem sedang memuat data kecerdasan buatan...', 'info');
+        return;
+    }
+    tipeAbsenAktif = tipe;
+
+    halamanPilih.classList.add('d-none');
+    halamanKamera.classList.remove('d-none');
+
+    if (modeAktifEl) modeAktifEl.innerText = "Absen " + tipe;
+    if (infoTipeEl) infoTipeEl.innerText = "Absen " + tipe;
+
+    Swal.fire({
+        title: `Mode Absen ${tipe} Aktif`,
+        text: 'Silahkan menghadap ke kamera.',
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false
+    });
+
+    startVideo();
+}
+
+// FUNGSI UNTUK MERESET DAN KEMBALI KE HALAMAN UTAMA
+function resetHalaman() {
+    if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+    }
+
+    video.srcObject = null;
+
+    const oldCanvas = document.querySelector('.video-wrapper canvas');
+    if (oldCanvas) oldCanvas.remove();
+
+    halamanKamera.classList.add('d-none');
+    halamanPilih.classList.remove('d-none');
+
+    tipeAbsenAktif = "";
+}
 
 Promise.all([
     faceapi.nets.ssdMobilenetv1.loadFromUri('./models'),
     faceapi.nets.faceLandmark68Net.loadFromUri('./models'),
     faceapi.nets.faceRecognitionNet.loadFromUri('./models')
-]).then(startVideo);
+]).then(() => {
+    modelsLoaded = true;
+});
 
 function startVideo() {
     navigator.mediaDevices.getUserMedia({
@@ -24,6 +76,7 @@ function startVideo() {
     })
         .then((stream) => {
             video.srcObject = stream;
+            localStream = stream;
         })
         .catch((err) => {
             console.error(err);
@@ -87,7 +140,9 @@ video.addEventListener('play', async () => {
     );
 
     setInterval(async () => {
-
+        if (!video.srcObject) {
+            return;
+        }
         const detections =
             await faceapi
                 .detectAllFaces(
@@ -177,24 +232,6 @@ video.addEventListener('play', async () => {
                     });
 
                     const data = await response.json();
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Presensi Berhasil',
-                            text: `${data.nama} (${data.status.toUpperCase()})`,
-                            timer: 2500,
-                            showConfirmButton: false
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Peringatan',
-                            text: data.message,
-                            timer: 2500,
-                            showConfirmButton: false
-                        });
-
-                    }
 
                     // UPDATE PANEL KANAN
                     namaEl.innerText =
@@ -217,6 +254,29 @@ video.addEventListener('play', async () => {
                     `;
 
                     logList.prepend(li);
+
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Presensi Berhasil',
+                            text: `${data.nama} (${data.status.toUpperCase()})`,
+                            timer: 2500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            resetHalaman(); // <--- KEMBALI KE HALAMAN PILIH
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Peringatan',
+                            text: data.message,
+                            timer: 2500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            resetHalaman(); // <--- KEMBALI KARENA GAGAL/SUDAH ABSEN
+                        });
+
+                    }
 
                     // AUDIO
                     // if (result.label === 'Jokowi') {
