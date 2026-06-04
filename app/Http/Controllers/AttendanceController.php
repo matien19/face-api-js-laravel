@@ -65,20 +65,6 @@ class AttendanceController extends Controller
                 'message' => 'Sudah melakukan presensi hari ini'
             ]);
         }
-        $lastPresensi = PresensiModel::where('user_id', $user->id)
-            ->latest('waktu_masuk')
-            ->first();
-
-        if (
-            $lastPresensi &&
-            now()->diffInMinutes($lastPresensi->waktu_masuk) < 3
-        ) {
-            return response()->json([
-                'success' => false,
-                'status' => 'Tunggu 3 menit',
-                'message' => 'Tunggu 3 menit sebelum presensi lagi'
-            ]);
-        }
         
         $jamMasuk = now()->format('H:i');
 
@@ -96,6 +82,20 @@ class AttendanceController extends Controller
             'status' => $status
         ]);
 
+        $lastPresensi = PresensiModel::where('user_id', $user->id)
+            ->latest('waktu_masuk')
+            ->first();
+
+        if (
+            $lastPresensi &&
+            now()->diffInMinutes($lastPresensi->waktu_masuk) < 3
+        ) {
+            return response()->json([
+                'success' => false,
+                'status' => 'Tunggu 3 menit',
+                'message' => 'Tunggu 3 menit sebelum presensi lagi'
+            ]);
+        }
         return response()->json([
             'success' => true,
             'nama' => $user->name,

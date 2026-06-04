@@ -57,7 +57,11 @@ function resetHalaman() {
 
     halamanKamera.classList.add('d-none');
     halamanPilih.classList.remove('d-none');
-
+    // === TAMBAHAN UNTUK MERESET PANEL KANAN ===
+    if (namaEl) namaEl.innerText = "-";
+    if (statusEl) statusEl.innerText = "-";
+    if (waktuEl) waktuEl.innerText = "-";
+    // ==========================================
     tipeAbsenAktif = "";
 }
 

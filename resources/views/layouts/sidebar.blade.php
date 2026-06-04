@@ -21,9 +21,15 @@
                     <p class="navbar-vertical-label">Apps</p>
                     <hr class="navbar-vertical-line" />
                     <!-- parent pages-->
+                    @php
+                    $rute = [
+                        'user*' => 'User',
+                        'lokasi*' => 'Lokasi',
+                    ];
+                    @endphp
                     <div class="nav-item-wrapper"><a class="nav-link dropdown-indicator label-1" href="#nv-CRM"
                             role="button" data-bs-toggle="collapse"
-                            aria-expanded="{{ Request::is('user*') ? 'true' : 'false' }}" aria-controls="nv-CRM">
+                            aria-expanded="{{ Request::is(array_keys($rute)) ? 'true' : 'false' }}" aria-controls="nv-CRM">
                             <div class="d-flex align-items-center">
                                 <div class="dropdown-indicator-icon-wrapper">
                                     <span class="fas fa-caret-right dropdown-indicator-icon"></span>
@@ -34,7 +40,7 @@
                             </div>
                         </a>
                         <div class="parent-wrapper label-1">
-                            <ul class="nav collapse parent {{ Request::is('user*') ? 'show' : '' }}"
+                            <ul class="nav collapse parent {{ Request::is(array_keys($rute)) ? 'show' : '' }}"
                                 data-bs-parent="#navbarVerticalCollapse" id="nv-CRM">
                                 <li class="collapsed-nav-item-title d-none">Master Data</li>
                                 <li class="nav-item">
@@ -46,7 +52,15 @@
                                     </a>
                                     <!-- more inner pages-->
                                 </li>
-
+                                <li class="nav-item">
+                                    <a class="nav-link {{ Request::is('lokasi*') ? 'active' : '' }}"
+                                        href="{{ route('md.lokasi') }}">
+                                        <div class="d-flex align-items-center">
+                                            <span class="nav-link-text">Lokasi</span>
+                                        </div>
+                                    </a>
+                                    <!-- more inner pages-->
+                                </li>
                             </ul>
                         </div>
                     </div>
