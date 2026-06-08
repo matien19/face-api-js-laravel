@@ -25,4 +25,23 @@ class LokasiController extends Controller
 
         return redirect()->route('md.lokasi')->with('success', 'Lokasi berhasil ditambahkan');
     }
+
+    public function update(Request $request, LokasiModel $lokasi)
+    {
+        $request->validate([
+            'lokasi' => 'required|string|max:255',
+        ]);
+
+        $lokasi->update([
+            'nama_lokasi' => $request->lokasi,
+        ]);
+
+        return redirect()->route('md.lokasi')->with('success', 'Lokasi berhasil diperbarui');
+    }
+
+    public function destroy(LokasiModel $lokasi)
+    {
+        $lokasi->delete();
+        return redirect()->route('md.lokasi')->with('success', 'Lokasi berhasil dihapus');
+    }
 }

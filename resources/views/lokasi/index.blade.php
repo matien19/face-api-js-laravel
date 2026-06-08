@@ -39,12 +39,19 @@
                     <tr>
                         <td class="no align-middle">{{ $loop->iteration }}</td>
                         <td class="lokasi align-middle">{{ $item->nama_lokasi }}</td>
-                        <td class="align-middle text-end">
-                            <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
-                            <form action="#" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus lokasi ini?')">
+                        <td class="action align-middle white-space-nowrap text-end">
+                            <button type="button" class="btn btn-xs btn-outline-primary me-2" data-bs-toggle="modal"
+                                data-bs-target="#tambah" data-id="{{ $item->id }}" data-name="{{ $item->nama_lokasi }}">
+                                <span class="fas fa-edit"></span>
+                            </button>
+
+                            <form action="{{ route('md.lokasi.delete', $item->id) }}" method="POST" class="d-inline"
+                                onsubmit="return confirm('Hapus lokasi ini?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                                <button type="submit" class="btn btn-xs btn-outline-danger">
+                                    <span class="fas fa-trash"></span>
+                                </button>
                             </form>
                         </td>
                     </tr>

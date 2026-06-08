@@ -59,7 +59,20 @@
                         <td class="last-seen align-middle white-space-nowrap text-body-tertiary text-end">34 min ago
                         </td>
                         <td class="action align-middle white-space-nowrap text-end">
+                            <button type="button" class="btn btn-xs btn-outline-primary me-2" data-bs-toggle="modal"
+                                data-bs-target="#tambah" data-id="{{ $user->id }}" data-name="{{ $user->name }}"
+                                data-email="{{ $user->email }}" data-alamat="{{ $user->alamat }}">
+                                <span class="fas fa-edit"></span>
+                            </button>
 
+                            <form action="{{ route('md.user.delete', $user->id) }}" method="POST" class="d-inline"
+                                onsubmit="return confirm('Hapus pengguna ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-xs btn-outline-danger">
+                                    <span class="fas fa-trash"></span>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach
@@ -84,7 +97,7 @@
 </div>
 <div class="modal fade" id="tambah" tabindex="-1" data-bs-backdrop="static" aria-labelledby="tambah" aria-hidden="true">
     <div class="modal-dialog">
-        <form action="{{ route('md.user.tambah') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('md.user.tambah') }}" method="POST" enctype="multipart/form-data" id="formUser">
             @csrf
 
             <div class="modal-content">
@@ -140,6 +153,7 @@
         </form>
     </div>
 </div>
+
 @endsection
 @push('scripts')
 <script defer src="{{ asset('js/face-api.min.js') }}"></script>
@@ -163,11 +177,11 @@
 </script>
 <script>
     function setFotoLoading(loading) {
-    const controls = document.querySelectorAll('#tambah form input, #tambah form textarea, #tambah form button[type="submit"]');
-    controls.forEach(el => el.disabled = loading);
-    const status = document.getElementById('preview-status');
-    status.textContent = loading ? 'Mendeteksi wajah, harap tunggu...' : '';
-}
+        const controls = document.querySelectorAll('#tambah form input, #tambah form textarea, #tambah form button[type="submit"]');
+        controls.forEach(el => el.disabled = loading);
+        const status = document.getElementById('preview-status');
+        status.textContent = loading ? 'Mendeteksi wajah, harap tunggu...' : '';
+    }
 
 document.getElementById('foto')
     .addEventListener('change', async function (event) {
@@ -198,5 +212,35 @@ document.getElementById('foto')
         }
     });
 
+  const userModal = document.getElementById('tambah');
+        if (userModal) {
+            userModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget; // Tombol yang memicu modal
+                
+                // Ambil semua data-attributes dari tombol
+                const id = button.getAttribute('data-id');
+                const name = button.getAttribute('data-name');
+                const email = button.getAttribute('data-email');
+                const alamat = button.getAttribute('data-alamat');
+
+                // Elemen form di dalam modal
+                const modalTitle = userModal.querySelector('.modal-title');
+                const form = document.getElementById('formUser');
+
+                if (id) {
+                    modalTitle.textContent = 'Edit User Kasir';
+                    
+                    form.action = `/user/${id}/update`;
+                    form.querySelector('input[name="name"]').value = name || '';
+                    form.querySelector('input[name="email"]').value = email || '';
+                    form.querySelector('textarea[name="alamat"]').value = alamat || '';
+
+                } else {
+                    modalTitle.textContent = 'Tambah User';
+                    form.action = "{{ route('md.user.tambah') }}"; // Kembali ke rute store semula
+                    form.reset();
+                }
+            });
+        }
 </script>
 @endpush
