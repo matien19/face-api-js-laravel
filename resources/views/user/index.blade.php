@@ -56,7 +56,14 @@
                         <td class="city align-middle white-space-nowrap text-body-highlight ps-7">{{ $user->alamat ??
                             '-' }}
                         </td>
-                        <td class="last-seen align-middle white-space-nowrap text-body-tertiary text-end">34 min ago
+                        <td class="last-seen align-middle white-space-nowrap text-body-tertiary text-end">
+                            @if($user->is_online)
+                            <span class="badge rounded-pill bg-success">● Online</span>
+                            @else
+                            <span class="badge rounded-pill bg-secondary">
+                                {{ $user->last_activity?->diffForHumans() ?? 'Offline' }}
+                            </span>
+                            @endif
                         </td>
                         <td class="action align-middle white-space-nowrap text-end">
                             <button type="button" class="btn btn-xs btn-outline-primary me-2" data-bs-toggle="modal"

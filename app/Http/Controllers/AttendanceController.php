@@ -86,16 +86,16 @@ class AttendanceController extends Controller
             ->latest('waktu_masuk')
             ->first();
 
-        if (
-            $lastPresensi &&
-            now()->diffInMinutes($lastPresensi->waktu_masuk) < 3
-        ) {
-            return response()->json([
-                'success' => false,
-                'status' => 'Tunggu 3 menit',
-                'message' => 'Tunggu 3 menit sebelum presensi lagi'
-            ]);
-        }
+        // if (
+        //     $lastPresensi &&
+        //     now()->diffInMinutes($lastPresensi->waktu_masuk) < 3
+        // ) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'status' => 'Tunggu 3 menit',
+        //         'message' => 'Tunggu 3 menit sebelum presensi lagi'
+        //     ]);
+        // }
         return response()->json([
             'success' => true,
             'nama' => $user->name,

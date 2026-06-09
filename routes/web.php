@@ -13,7 +13,7 @@ Route::get('/face-descriptors', [AttendanceController::class, 'descriptors'])->n
 Route::post('/face/store', [AttendanceController::class, 'store']);
 
 Auth::routes(); 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'activity'])->group(function () {
     Route::get('/beranda', [HomeController::class, 'index'])->name('beranda');
 
     // Master Data
